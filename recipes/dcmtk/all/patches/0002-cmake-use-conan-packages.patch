@@ -96,7 +96,7 @@
 -    find_package(Charset QUIET)
 -    if(ICONV_FOUND)
 +    find_package(Iconv REQUIRED)
-+    #find_package(Charset QUIET) #FIXME??
++    find_package(Charset REQUIRED)
 +    if(Iconv_FOUND)
          if(NOT Iconv_IS_BUILT_IN)
              set(LIBICONV_FOUND ${ICONV_FOUND})
