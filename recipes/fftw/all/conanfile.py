@@ -100,6 +100,8 @@ class FFTWConan(ConanFile):
         tc.variables["ENABLE_SSE2"] = self.options.enable_sse2
         tc.variables["ENABLE_AVX"] = self.options.enable_avx
         tc.variables["ENABLE_AVX2"] = self.options.enable_avx2
+        if self.settings.os == "Windows" and self.settings.compiler == "gcc" and self.options.simd != False:
+            tc.preprocessor_definitions["WITH_OUR_MALLOC"] = None
         tc.generate()
 
     @property
