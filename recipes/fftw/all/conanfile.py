@@ -34,7 +34,11 @@ class FFTWConan(ConanFile):
         "openmp": [True, False],
         "threads": [True, False],
         "combinedthreads": [True, False],
-        "simd": ["sse", "sse2", "avx", "avx2", False],
+        "simd": ["sse", "sse2", "avx", "avx2", False, 'deprecated'],
+        "enable_sse": [True, False],
+        "enable_sse2": [True, False],
+        "enable_avx": [True, False],
+        "enable_avx2": [True, False]
     }
     default_options = {
         "shared": False,
@@ -47,7 +51,11 @@ class FFTWConan(ConanFile):
         "openmp": False,
         "threads": False,
         "combinedthreads": False,
-        "simd": False,
+        "simd": 'deprecated',
+        "enable_sse": False,
+        "enable_sse2": True,
+        "enable_avx": True,
+        "enable_avx2": False
     }
 
     def export_sources(self):
@@ -66,6 +74,8 @@ class FFTWConan(ConanFile):
             del self.options.combinedthreads
         if self.options.precision != "deprecated":
             self.output.warning("precision options is deprecated! use dedicated options 'precision_single', 'precision_double', 'precision_longdouble' and 'precision_quad' instead")
+        if self.options.simd != "deprecated":
+            self.output.warning("simd options is deprecated! use dedicated options 'enable_sse', 'enable_sse2', 'enable_avx' and 'enable_avx2' instead")
 
     def layout(self):
         cmake_layout(self, src_folder="src")
@@ -86,10 +96,10 @@ class FFTWConan(ConanFile):
         tc.variables["ENABLE_OPENMP"] = self.options.openmp
         tc.variables["ENABLE_THREADS"] = self.options.threads
         tc.variables["WITH_COMBINED_THREADS"] = self.options.get_safe("combinedthreads", False)
-        tc.variables["ENABLE_SSE"] = self.options.simd == "sse"
-        tc.variables["ENABLE_SSE2"] = self.options.simd == "sse2"
-        tc.variables["ENABLE_AVX"] = self.options.simd == "avx"
-        tc.variables["ENABLE_AVX2"] = self.options.simd == "avx2"
+        tc.variables["ENABLE_SSE"] = self.options.enable_sse
+        tc.variables["ENABLE_SSE2"] = self.options.enable_sse2
+        tc.variables["ENABLE_AVX"] = self.options.enable_avx
+        tc.variables["ENABLE_AVX2"] = self.options.enable_avx2
         tc.generate()
 
     @property
